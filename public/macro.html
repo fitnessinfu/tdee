@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FITNESSINFU | MACRO CALCULATOR</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: navy;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      width: 100%;
+      padding: 20px 0;
+      text-align: center;
+      color: #fff;
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      background: #fff;
+      padding: 24px 32px;
+      border-radius: 8px;
+      box-shadow: 0 6px 30px rgba(0,0,0,.09);
+      max-width: 340px;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 600;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 7px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background: #2166f6;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    .result {
+      margin-top: 18px;
+      padding: 10px;
+      background: #f3faff;
+      border-radius: 5px;
+      border: 1px solid #e2e2e2;
+    }
+
+    .macro-list {
+      margin-top: 8px;
+      padding-left: 0;
+      list-style: none;
+    }
+  </style>
+</head>
+<body>
+
+  <header>FITNESSINFU</header>
+
+  <div class="container">
+    <h2>Macro Calculator</h2>
+    <form id="macroForm">
+      <label>Age</label>
+      <input type="number" id="age" min="10" max="99" required>
+
+      <label>Gender</label>
+      <select id="gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+
+      <label>Weight (kg)</label>
+      <input type="number" id="weight" min="20" max="250" required>
+
+      <label>Height (cm)</label>
+      <input type="number" id="height" min="100" max="250" required>
+
+      <label>Activity Level</label>
+      <select id="activity">
+        <option value="1.2">Sedentary (little to no exercise)</option>
+        <option value="1.375">Lightly active (light exercise/sports 1-3 days/week)</option>
+        <option value="1.55">Moderately active (moderate exercise 3-5 days/week)</option>
+        <option value="1.725">Very active (hard exercise 6-7 days a week)</option>
+        <option value="1.9">Super active (very hard exercise, physical job or training)</option>
+      </select>
+      <button type="submit">Calculate</button>
+    </form>
+    <div class="result" id="result" style="display:none"></div>
+  </div>
+
+  <script>
+    document.getElementById('macroForm').onsubmit = function(e){
+      e.preventDefault();
+      let age = +document.getElementById('age').value;
+      let gender = document.getElementById('gender').value;
+      let weight = +document.getElementById('weight').value;
+      let height = +document.getElementById('height').value;
+      let activity = +document.getElementById('activity').value;
+
+      let bmr;
+      if(gender === "male"){
+        bmr = 10*weight + 6.25*height - 5*age + 5;
+      } else {
+        bmr = 10*weight + 6.25*height - 5*age - 161;
+      }
+
+      let calories = Math.round(bmr * activity);
+
+      let proteinCals = calories * 0.30;
+      let carbCals    = calories * 0.40;
+      let fatCals     = calories * 0.30;
+
+      let proteinGrams = Math.round(proteinCals / 4);
+      let carbGrams    = Math.round(carbCals / 4);
+      let fatGrams     = Math.round(fatCals / 9);
+
+      document.getElementById('result').innerHTML = `
+        <strong>Maintenance Calories:</strong> ${calories} kcal/day
+        <ul class="macro-list">
+          <li>Protein: <strong>${proteinGrams} g</strong></li>
+          <li>Carbs: <strong>${carbGrams} g</strong></li>
+          <li>Fat: <strong>${fatGrams} g</strong></li>
+        </ul>
+        <span style="font-size:12px;">* Macros based on 30/40/30 split</span>
+      `;
+      document.getElementById('result').style.display = 'block';
+    };
+  </script>
+</body>
+</html>
